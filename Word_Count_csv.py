@@ -1,13 +1,15 @@
 import re, nltk, pandas
 from operator import itemgetter
 from collections import OrderedDict
+
+from more_itertools import take
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 
 stop_words = set(stopwords.words('english'))
 wordnet_lemmatizer = WordNetLemmatizer()
 
-df = pandas.read_csv("Reddit_Data.csv", usecols=['clean_comment'])
+df = pandas.read_csv("Dataset/Reddit_Data.csv", usecols=['clean_comment'])
 df = df.rename(columns={'clean_comment': 'text'})
 
 # print(df.describe())
@@ -53,10 +55,18 @@ for word in say:
 # We sort it by value and reverse: so big value is fist elemnet of sorted_x
 sorted_x = OrderedDict(sorted(wordcount.items(), key=itemgetter(1), reverse=True))
 print(sorted_x)
+# OrderedDict([('people', 5582), ('india', 5314), ('like', 5140), ('bjp', 5091), ('modi', 5022), ...
 
 for key in sorted_x.keys():
     if sorted_x[key] > 1000:
         print("{} : {}".format(key, sorted_x[key]))
 
 
+n_items = take(10, sorted_x.items())  # Take first 10 element like list of tuple
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
+pd.DataFrame(n_items, columns=['Word Count on CSV','Words']).set_index('Word Count on CSV').plot(kind='bar')
+plt.show()
 
