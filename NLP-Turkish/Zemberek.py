@@ -1,3 +1,5 @@
+# Bu kod yandaki adresten alınmıştır. https://github.com/Loodos/zemberek-python
+
 import time
 import logging
 
