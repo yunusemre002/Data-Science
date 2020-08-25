@@ -1,51 +1,24 @@
-import time
-import logging
+import pandas as pd
+from zemberek import TurkishSentenceNormalizer, TurkishMorphology
 
-from zemberek import (
-    TurkishSentenceNormalizer,
-    TurkishMorphology,
-)
+# İMPORT DATASET
+# There is no column name in dataset so we include header=None and we detect some columns name for thats and
+# we give this columns names using names=column
 
-logger = logging.getLogger(__name__)
+# Columns names are detected and create a list.
+colnames = ["speed", "service", "flavor", "delete", "review", "restoraand_id"]
+df = pd.read_csv("C:/Users/Demir/Desktop/Loodos/comments_with_restaurant_id.tsv", sep="\t", names=colnames, header=None)
+df.drop("delete", axis = 1, inplace=True)                     # There are a column which is unknown by us so it deleted.
+# print(df.info(), df.head(5), df.describe().T, sep="\n\n")
 
-examples = ["poscihazı hep bozuk nedense",
-            "hızlı servis güleryüzlü garsonlar",
-            "yemekelr süpeerdi ama servis yavş dahası ilgelimiyor.",
-            "leeş"]
+df = df.sample(frac = 0.0001, replace = False, random_state=17) # Take just a few of all reviews
+print(df.shape)
 
-morphology = TurkishMorphology.create_with_defaults()
 
 # SENTENCE NORMALIZATION
-# start = time.time()
+morphology = TurkishMorphology.create_with_defaults()
 normalizer = TurkishSentenceNormalizer(morphology)
-# logger.info(f"Normalization instance created in: {time.time() - start} s")
 
-# start = time.time()
-for example in examples:
-    print(example)
-    print(normalizer.normalize(example), "\n")
-# logger.info(f"Sentences normalized in: {time.time() - start} s")
-
-
-
-# # SENTENCE BOUNDARY DETECTION
-# start = time.time()
-# extractor = TurkishSentenceExtractor()
-# print("Extractor instance created in: ", time.time() - start, " s")
-#
-# text = "İnsanoğlu aslında ne para ne sevgi ne kariyer ne şöhret ne de çevre ile sonsuza dek mutlu olabilecek bir " \
-#        "yapıya sahiptir. Dış kaynaklardan gelebilecek bu mutluluklar sadece belirli bir zaman için insanı mutlu " \
-#        "kılıyor. Kişi bu kaynakları elde ettiği zaman belirli bir dönem için kendini iyi hissediyor, ancak alışma " \
-#        "dönemine girdiği andan itibaren bu iyilik hali hızla tükeniyor. Mutlu olma sanatının özü bu değildir. Gerçek " \
-#        "mutluluk, kişinin her türlü olaya ve duruma karşı kendini pozitif tutarak mutlu hissedebilmesi halidir. Bu " \
-#        "davranış şeklini edinen insan, zor günlerde güçlü, mutlu günlerde zevk alan biri olur ve mutluluğu kalıcı " \
-#        "kılar. "
-#
-# start = time.time()
-# sentences = extractor.from_paragraph(text)
-# print(f"Sentences separated in {time.time() - start}s")
-#
-# for sentence in sentences:
-#     print(sentence)
-# print("\n")
-
+for i in df["review"]:
+    print(i)
+    print(normalizer.normalize(i), "\n")

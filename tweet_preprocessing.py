@@ -1,7 +1,7 @@
 import pandas as pd
 from nltk import re
 
-df = pd.read_csv("covid19_tweets.csv", usecols=['text'])
+df = pd.read_csv("Dataset/covid19_tweets.csv", usecols=['text'])
 df = df.sample(frac = 0.001, replace = False, random_state=42)      # Take %0.5 of total reviews
 print(df.describe())
 
