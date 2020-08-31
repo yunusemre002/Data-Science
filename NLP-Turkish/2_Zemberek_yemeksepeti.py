@@ -30,12 +30,25 @@ normalizer = TurkishSentenceNormalizer(morphology)
 
 
 # Option 3. -------------------- For write to txt--------------
-df = df.sample(frac = 0.0001, replace = False, random_state=17) # Take just a few of all reviews
+# df = df.sample(frac = 0.0001, replace = False, random_state=17) # Take just a few of all reviews
 outF = open("CommentNormalized.txt", "w+", encoding="utf-8")
 
-for i in df["review"]:
+
+import time
+import logging
+logger = logging.getLogger(__name__)
+start = time.time()
+
+
+
+for index, i in enumerate(df["review"]):
     i_normalized = normalizer.normalize(i)
-    print("{}\n{}\n".format(i, i_normalized))
+    print("{}\n{} {}\n".format(i, i_normalized, index))
     outF.write("%s \n%s\n\n" % (i, i_normalized))
+
+
+logger.info(f"Normalization instance created in: {time.time() - start} s")
+
+
 
 outF.close()
